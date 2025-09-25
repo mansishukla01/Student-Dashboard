@@ -1,0 +1,11 @@
+{
+  "students": [
+    { "roll": 1, "name": "A", "class": "10th", "marks": 85, "grade": "A" },
+    { "roll": 2, "name": "B", "class": "10th", "marks": 72, "grade": "B" },
+    { "roll": 3, "name": "C", "class": "10th", "marks": 90, "grade": "A+" },
+    { "roll": 4, "name": "D", "class": "10th", "marks": 68, "grade": "B" },
+    { "roll": 5, "name": "E", "class": "10th", "marks": 75, "grade": "B+" },
+    { "roll": 6, "name": "F", "class": "10th", "marks": 95, "grade": "A+" },
+    { "roll": 7, "name": "G", "class": "10th", "marks": 60, "grade": "C" }
+  ]
+}
