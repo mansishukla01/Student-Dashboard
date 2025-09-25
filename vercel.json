@@ -7,8 +7,7 @@
       "config": { "distDir": "dist" }
     }
   ],
-  "rewrites": [
-    { "handle": "filesystem" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
