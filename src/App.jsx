@@ -4,13 +4,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA336A", "#33AA77", "#FF4444"];
 
 const initialData = [
-  { roll: 1, name: "Test 1", class: "10th", marks: 85, grade: "A" },
-  { roll: 2, name: "Test 2", class: "10th", marks: 72, grade: "B" },
-  { roll: 3, name: "Test 3", class: "10th", marks: 90, grade: "A+" },
-  { roll: 4, name: "Test 4", class: "10th", marks: 68, grade: "B" },
-  { roll: 5, name: "Test 5", class: "10th", marks: 75, grade: "B+" },
-  { roll: 6, name: "Test 6", class: "10th", marks: 95, grade: "A+" },
-  { roll: 7, name: "Test 7", class: "10th", marks: 60, grade: "C" },
+  { roll: 1, name: "Test 1", class: "10th", marks: "", grade: "A" },
+  { roll: 2, name: "Test 2", class: "10th", marks: "", grade: "B" },
+  { roll: 3, name: "Test 3", class: "10th", marks: "", grade: "A+" },
+  { roll: 4, name: "Test 4", class: "10th", marks: "", grade: "B" },
+  { roll: 5, name: "Test 5", class: "10th", marks: "", grade: "B+" },
+  { roll: 6, name: "Test 6", class: "10th", marks: "", grade: "A+" },
+  { roll: 7, name: "Test 7", class: "10th", marks: "", grade: "C" },
 ];
 
 const rowsPerPage = 5;
@@ -22,13 +22,43 @@ export default function App() {
   const totalPages = Math.ceil(students.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedStudents = students.slice(startIndex, startIndex + rowsPerPage);
+  const [tempMarks, setTempMarks] = useState({});
+  
+  
 
   const handleChange = (e, roll, field) => {
-    const newData = students.map((s) =>
-      s.roll === roll ? { ...s, [field]: e.target.value } : s
-    );
-    setStudents(newData);
-  };
+  const { value } = e.target;
+  setStudents((prev) =>
+    prev.map((s) =>
+      s.roll === roll ? { ...s, [field]: value } : s
+    )
+  );
+};
+
+const handleSave = (roll) => {
+  setStudents((prev) =>
+    prev.map((s) =>
+      s.roll === roll
+        ? { ...s, marks: Number(tempMarks[roll] || s.marks) }
+        : s
+    )
+  );
+  alert(`Marks saved successfully for Roll No: ${roll}`);
+  setTempMarks((prev) => {
+    const updated = { ...prev };
+    delete updated[roll]; 
+    return updated;
+  });
+};
+
+const handleTempChange = (e, roll) => {
+  const { value } = e.target;
+  setTempMarks((prev) => ({
+    ...prev,
+    [roll]: value
+  }));
+};
+
 
   const thTdStyle = {
     border: "1px solid #ccc",
@@ -84,7 +114,7 @@ export default function App() {
       <table style={tableStyle}>
         <thead>
           <tr>
-            <th style={thTdStyle}>Roll No</th>
+            <th style={{...thTdStyle, width:"60px"}}>Roll No</th>
             <th style={thTdStyle}>Name</th>
             <th style={thTdStyle}>Class</th>
             <th style={thTdStyle}>Marks</th>
@@ -98,6 +128,7 @@ export default function App() {
                 <input
                   type="text"
                   value={s.roll}
+                  disabled
                   onChange={(e) => handleChange(e, s.roll, "roll")}
                   style={inputStyle}/>
               </td>
@@ -116,20 +147,35 @@ export default function App() {
                   style={inputStyle}/>
               </td>
               <td style={thTdStyle}>
-                <input
-                  type="text"
-                  value={s.marks}
-                  onChange={(e) => handleChange(e, s.roll, "marks")}
-                  style={inputStyle}/>
-              </td>
-              <td style={thTdStyle}>
-                <input
-                  type="text"
-                  value={s.grade}
-                  onChange={(e) => handleChange(e, s.roll, "grade")}
-                  style={inputStyle}/>
-              </td>
-            </tr>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px" }}>
+            <input
+             value={tempMarks[s.roll] ?? ""}
+             onChange={(e) => handleTempChange(e, s.roll)}
+             style={{ ...inputStyle, width: "300px" }}/>
+          <button
+         onClick={() => handleSave(s.roll)}
+        style={{
+        padding: "4px 8px",
+        backgroundColor: "#0088FE",
+        color: "#fff",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}>
+      Save
+    </button>
+  </div>
+</td>
+
+
+     <td style={thTdStyle}>
+      <input
+       type="text"
+       value={s.grade}
+       onChange={(e) => handleChange(e, s.roll, "grade")}
+        style={inputStyle}/>
+          </td>
+          </tr>
           ))}
         </tbody>
       </table>
@@ -149,8 +195,6 @@ export default function App() {
           Next
         </button>
       </div>
-
-   
       <div style={{ width: "100%", height: "300px", marginTop: "30px" }}>
         <ResponsiveContainer>
           <PieChart>
