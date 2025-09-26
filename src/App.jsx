@@ -44,11 +44,11 @@ const handleSave = (roll) => {
     )
   );
   alert(`Marks saved successfully for Roll No: ${roll}`);
-  setTempMarks((prev) => {
-    const updated = { ...prev };
-    delete updated[roll]; 
-    return updated;
-  });
+
+  setTempMarks((prev) => ({
+    ...prev,
+    [roll]: Number(prev[roll] || 0)
+  }));
 };
 
 const handleTempChange = (e, roll) => {
